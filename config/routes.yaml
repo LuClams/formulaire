@@ -1,0 +1,52 @@
+controllers:
+    resource: ../src/Controller/
+    type: annotation
+
+kernel:
+    resource: ../src/Kernel.php
+    type: annotation
+
+app_home:
+    path: /home
+    controller: App\Controller\HomeController::app_home
+
+account:
+    path: /account
+    controller: App\Controller\AccountController::app_account
+
+app_register:
+    path: /register
+    controller: App\Controller\RegistrationController::app_register
+
+app_verify_email:
+    path: /verify/email
+    controller: App\Controller\RegistrationController::app_verifyUserEmail
+
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::app_login
+
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::app_logout
+
+app_reset_password:
+    path: /reset-password
+    controller: App\Controller\ResetPasswordController
+
+app_forgot_password_request:
+    path: /request
+    controller: App\Controller\ResetPasswordController::request
+
+app_check_email:
+    path: /check-email
+    controller: App\Controller\ResetPasswordController::checkEmail
+
+app_contact:
+    path: /contactez-nous
+    controller: App\Controller\ContactController::contact
+
+dashboard:
+    path: /admin
+    controller: App\Controller\Admin\DashboardController::index
+
