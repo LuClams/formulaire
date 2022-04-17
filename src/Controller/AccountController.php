@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AccountController extends AbstractController
 {
-    //#[Route('/account', name: 'app_account')]
+    #[Route('/account/{id}', name: 'app_account')]
     public function app_account(): Response
     {
         return //new Response('<body>Coucou world !</body>');

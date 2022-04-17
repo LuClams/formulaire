@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ManagerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ManagerRepository::class)]
@@ -19,14 +21,22 @@ class Manager
     #[ORM\Column(type: 'string', length: 255)]
     private $lastname;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $email;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $password;
+    #[ORM\OneToOne(inversedBy: 'manager', targetEntity: Hostel::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private $hostel;
 
-    #[ORM\OneToOne(targetEntity: Hostel::class, cascade: ['persist', 'remove'])]
-    private $hostelManager;
+    #[ORM\OneToMany(mappedBy: 'manager', targetEntity: Room::class)]
+    private $room;
+
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
+
+    public function __construct()
+    {
+        $this->room = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -57,39 +67,62 @@ class Manager
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getHostel(): ?Hostel
     {
-        return $this->email;
+        return $this->hostel;
     }
 
-    public function setEmail(string $email): self
+    public function setHostel(Hostel $hostel): self
     {
-        $this->email = $email;
+        $this->hostel = $hostel;
 
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * @return Collection<int, Room>
+     */
+    public function getRoom(): Collection
     {
-        return $this->password;
+        return $this->room;
     }
 
-    public function setPassword(string $password): self
+    public function addRoom(Room $room): self
     {
-        $this->password = $password;
+        if (!$this->room->contains($room)) {
+            $this->room[] = $room;
+            $room->setManager($this);
+        }
 
         return $this;
     }
 
-    public function getHostelManager(): ?Hostel
+    public function removeRoom(Room $room): self
     {
-        return $this->hostelManager;
-    }
-
-    public function setHostelManager(?Hostel $hostelManager): self
-    {
-        $this->hostelManager = $hostelManager;
+        if ($this->room->removeElement($room)) {
+            // set the owning side to null (unless already changed)
+            if ($room->getManager() === $this) {
+                $room->setManager(null);
+            }
+        }
 
         return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function __toString() {
+
+        return $this->lastname;
     }
 }

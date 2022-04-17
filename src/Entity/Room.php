@@ -6,6 +6,7 @@ use App\Repository\RoomRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use mysql_xdevapi\CollectionAdd;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation\Uploadable;
@@ -23,7 +24,7 @@ class Room
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255,)]
     #[Vich\UploadableField(mapping: 'room', fileNameProperty: 'image')]
     private $image;
 
@@ -35,6 +36,7 @@ class Room
 
     #[ORM\ManyToOne(targetEntity: Hostel::class, inversedBy: 'rooms')]
     private $hostelRoom;
+
     /**
      * @ORM\Column(type="string")
      */
@@ -42,6 +44,9 @@ class Room
 
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: Booking::class)]
     private $bookings;
+
+    #[ORM\ManyToOne(targetEntity: Manager::class, inversedBy: 'room')]
+    private $manager;
 
     public function __construct()
     {
@@ -116,7 +121,7 @@ class Room
      */
     public function setImageFile(?File $imageFile=null )
     {
-        $this->imageFile = $imageFile;
+        $this->imageFile = [$imageFile];
     }
 
     public function getDescription(): ?string
@@ -181,6 +186,23 @@ class Room
                 $booking->setRoom(null);
             }
         }
+
+        return $this;
+    }
+
+    public function __toString() {
+
+        return $this->title;
+    }
+
+    public function getManager(): ?Manager
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?Manager $manager): self
+    {
+        $this->manager = $manager;
 
         return $this;
     }

@@ -25,6 +25,9 @@ class Contact
     #[ORM\Column(type: 'datetime')]
     private $sentAt;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $object;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Contact
     public function setSentAt(\DateTimeInterface $sentAt): self
     {
         $this->sentAt = $sentAt;
+
+        return $this;
+    }
+
+    public function getObject(): ?string
+    {
+        return $this->object;
+    }
+
+    public function setObject(string $object): self
+    {
+        $this->object = $object;
 
         return $this;
     }

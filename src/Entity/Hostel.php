@@ -30,6 +30,9 @@ class Hostel
     #[ORM\OneToMany(mappedBy: 'hostelRoom', targetEntity: Room::class)]
     private $rooms;
 
+    #[ORM\OneToOne(mappedBy: 'hostel', targetEntity: Manager::class, cascade: ['persist', 'remove'])]
+    private $manager;
+
     public function __construct()
     {
         $this->rooms = new ArrayCollection();
@@ -117,4 +120,27 @@ class Hostel
 
         return $this;
     }
+
+    public function __toString() {
+
+        return $this->name;
+    }
+
+    public function getManager(): ?Manager
+    {
+        return $this->manager;
+    }
+
+    public function setManager(Manager $manager): self
+    {
+        // set the owning side of the relation if necessary
+        if ($manager->getHostel() !== $this) {
+            $manager->setHostel($this);
+        }
+
+        $this->manager = $manager;
+
+        return $this;
+    }
+
 }

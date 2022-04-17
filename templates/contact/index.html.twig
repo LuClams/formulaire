@@ -14,6 +14,7 @@
     {{ form_start(form) }}
     {{ form_row(form.name, { 'label': 'Votre nom' }) }}
     {{ form_row(form.email, { 'label': 'Votre email' }) }}
+    {{ form_row(form.object, { 'label': 'Objet du message' }) }}
     {{ form_row(form.message, { 'label': 'Votre message', 'attr': { 'rows': 10 } }) }}
     <button class="btn btn-primary" type="submit">Envoyer</button>
     {{ form_end(form) }}
